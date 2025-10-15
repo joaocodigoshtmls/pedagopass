@@ -1,0 +1,164 @@
+[
+  {
+    "id": "1",
+    "titulo": "Paris - Cidade da Luz",
+    "descricao": "Explore os museus, arquitetura e história francesa em uma viagem educacional inesquecível. Visite o Louvre, Torre Eiffel, Versalhes e participe de workshops de arte com especialistas renomados.",
+    "preco": 4500,
+    "imagem": "https://images.pexels.com/photos/161853/eiffel-tower-paris-france-tower-161853.jpeg?auto=compress&cs=tinysrgb&w=800",
+    "categoria": "Cultural",
+    "dataInicio": "2025-03-15",
+    "dataFim": "2025-03-22",
+    "vagas": 20,
+    "localizacao": "Paris, França",
+    "duracao": "7 dias",
+    "destaques": [
+      "Museu do Louvre",
+      "Torre Eiffel",
+      "Palácio de Versalhes",
+      "Workshops de arte"
+    ],
+    "inclui": [
+      "Hospedagem em hotel 4 estrelas",
+      "Café da manhã diário",
+      "Guia especializado em história da arte",
+      "Ingressos para museus e monumentos",
+      "Transporte local"
+    ],
+    "professor": {
+      "nome": "Dr. Ana Silva",
+      "especialidade": "História da Arte",
+      "bio": "Professora doutora em História da Arte com 15 anos de experiência em educação e pesquisa. Especialista em arte francesa e renascentista.",
+      "foto": "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=300"
+    },
+    "itinerario": [
+      {
+        "dia": 1,
+        "titulo": "Chegada e Centro Histórico",
+        "atividades": [
+          "Chegada ao aeroporto Charles de Gaulle",
+          "Check-in no hotel",
+          "Tour pelo centro histórico",
+          "Jantar de boas-vindas"
+        ]
+      },
+      {
+        "dia": 2,
+        "titulo": "Museu do Louvre",
+        "atividades": [
+          "Visita guiada ao Louvre",
+          "Workshop sobre técnicas pictóricas",
+          "Almoço no Café Marly",
+          "Tarde livre para exploração"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "2",
+    "titulo": "Roma - Berço da Civilização",
+    "descricao": "Descubra a história antiga e renascentista em uma das cidades mais importantes do mundo. Explore o Coliseu, Fórum Romano, Museus Vaticanos e participe de seminários sobre história antiga.",
+    "preco": 3800,
+    "imagem": "https://images.unsplash.com/photo-1552832230-c0197dd311b5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    "categoria": "Histórica",
+    "dataInicio": "2025-04-10",
+    "dataFim": "2025-04-16",
+    "vagas": 18,
+    "localizacao": "Roma, Itália",
+    "duracao": "6 dias",
+    "destaques": [
+      "Coliseu",
+      "Fórum Romano",
+      "Museus Vaticanos",
+      "Seminários de história"
+    ],
+    "inclui": [
+      "Hospedagem em hotel histórico",
+      "Café da manhã diário",
+      "Guia arqueólogo especializado",
+      "Ingressos para monumentos históricos",
+      "Transporte em ônibus climatizado"
+    ],
+    "professor": {
+      "nome": "Prof. Carlos Romano",
+      "especialidade": "História Antiga",
+      "bio": "Especialista em civilizações antigas com doutorado pela Universidade de Roma. Autor de diversos livros sobre o Império Romano.",
+      "foto": "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=300"
+    },
+    "itinerario": [
+      {
+        "dia": 1,
+        "titulo": "Chegada e Roma Antiga",
+        "atividades": [
+          "Chegada ao aeroporto Fiumicino",
+          "Transfer para hotel no centro",
+          "Visita ao Coliseu e Fórum Romano",
+          "Jantar em restaurante típico"
+        ]
+      },
+      {
+        "dia": 2,
+        "titulo": "Vaticano",
+        "atividades": [
+          "Museus Vaticanos",
+          "Capela Sistina",
+          "Basílica de São Pedro",
+          "Audiência papal (se disponível)"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "3",
+    "titulo": "Atenas - Filosofia e História",
+    "descricao": "Caminhe pelos passos dos grandes filósofos em uma jornada educacional única. Visite a Acrópole, Ágora Antiga, Museu Nacional e participe de debates filosóficos sobre o pensamento grego.",
+    "preco": 3200,
+    "imagem": "https://images.pexels.com/photos/2064827/pexels-photo-2064827.jpeg?auto=compress&cs=tinysrgb&w=800",
+    "categoria": "Educacional",
+    "dataInicio": "2025-05-05",
+    "dataFim": "2025-05-10",
+    "vagas": 15,
+    "localizacao": "Atenas, Grécia",
+    "duracao": "5 dias",
+    "destaques": [
+      "Acrópole",
+      "Ágora Antiga",
+      "Museu Nacional",
+      "Debates filosóficos"
+    ],
+    "inclui": [
+      "Hospedagem em hotel boutique",
+      "Café da manhã diário",
+      "Workshops de filosofia",
+      "Visitas arqueológicas guiadas",
+      "Material didático incluído"
+    ],
+    "professor": {
+      "nome": "Dra. Sofia Papadopoulos",
+      "especialidade": "Filosofia Clássica",
+      "bio": "Filósofa com especialização em pensamento grego antigo e métodos socráticos. Professora visitante em universidades europeias.",
+      "foto": "https://images.pexels.com/photos/712513/pexels-photo-712513.jpeg?auto=compress&cs=tinysrgb&w=300"
+    },
+    "itinerario": [
+      {
+        "dia": 1,
+        "titulo": "Chegada e Acrópole",
+        "atividades": [
+          "Chegada ao aeroporto de Atenas",
+          "Check-in no hotel",
+          "Visita à Acrópole e Partenon",
+          "Jantar com vista para a cidade"
+        ]
+      },
+      {
+        "dia": 2,
+        "titulo": "Filosofia e Cultura",
+        "atividades": [
+          "Ágora Antiga",
+          "Workshop sobre Sócrates e Platão",
+          "Museu Nacional Arqueológico",
+          "Debate filosófico ao entardecer"
+        ]
+      }
+    ]
+  }
+]

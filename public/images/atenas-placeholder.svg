@@ -1,0 +1,13 @@
+<svg width="800" height="400" viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="400" fill="#059669"/>
+  <rect x="50" y="50" width="700" height="300" fill="#047857" opacity="0.1"/>
+  <text x="400" y="180" font-family="Arial, sans-serif" font-size="36" font-weight="bold" text-anchor="middle" fill="white">Atenas</text>
+  <text x="400" y="220" font-family="Arial, sans-serif" font-size="20" text-anchor="middle" fill="white">Filosofia e História</text>
+  <rect x="300" y="260" width="200" height="80" fill="white" opacity="0.3"/>
+  <rect x="320" y="280" width="20" height="40" fill="white" opacity="0.5"/>
+  <rect x="350" y="280" width="20" height="40" fill="white" opacity="0.5"/>
+  <rect x="380" y="280" width="20" height="40" fill="white" opacity="0.5"/>
+  <rect x="410" y="280" width="20" height="40" fill="white" opacity="0.5"/>
+  <rect x="440" y="280" width="20" height="40" fill="white" opacity="0.5"/>
+  <rect x="470" y="280" width="20" height="40" fill="white" opacity="0.5"/>
+</svg>

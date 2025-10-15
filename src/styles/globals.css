@@ -1,0 +1,47 @@
+/* stylelint-disable */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+/* stylelint-enable */
+
+.aspect-w-16 {
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 */
+}
+
+.aspect-w-16 > * {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+@layer base {
+  body {
+    @apply bg-gray-50;
+    font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    color: #1f2937; /* gray-800 */
+  }
+}
+
+@layer components {
+  .prose ul > li {
+    @apply relative pl-6;
+  }
+  
+  .prose ul > li::before {
+    @apply absolute left-1 top-3 h-1.5 w-1.5 bg-gray-500 rounded-full;
+    content: "";
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center bg-blue-600 text-white px-4 py-2 rounded-md shadow-sm hover:bg-blue-700 transition;
+  }
+
+  .card {
+    @apply bg-white p-6 rounded-lg shadow-sm;
+  }
+}
