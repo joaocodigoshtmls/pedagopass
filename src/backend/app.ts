@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import cookieParser from 'cookie-parser';
 import routes from './routes';
 
 // Carregar variáveis de ambiente
@@ -20,6 +21,9 @@ class App {
     // Middleware para parsing de JSON
     this.express.use(express.json({ limit: '10mb' }));
     this.express.use(express.urlencoded({ extended: true, limit: '10mb' }));
+    
+    // Middleware para parsing de cookies
+    this.express.use(cookieParser());
 
     // Configurações de CORS
     const corsOptions = {

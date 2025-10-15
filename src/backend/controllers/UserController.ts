@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
 import UserService from '../services/UserService';
-import { UserDTO, LoginDTO } from '../models/User';
+import { RegisterDTO, LoginDTO } from '../models/User';
 
 class UserController {
   public async register(req: Request, res: Response): Promise<Response> {
     try {
-      const userData: UserDTO = req.body;
+      const userData: RegisterDTO = req.body;
 
       // Validação básica
       if (!userData.email || !userData.password || !userData.name) {

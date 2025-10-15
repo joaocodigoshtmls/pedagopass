@@ -1,173 +1,321 @@
 import { Request, Response } from 'express';
-import { PostService } from '../services/PostService';
+import PostService from '../services/PostService';
 import { PointsService } from '../services/PointsService';
+import {
+  CreatePostDTO,
+  UpdatePostDTO,
+  PostFilters,
+  PostsResponse,
+} from '../../shared/types';
 
-export class PostController {
-  private postService: PostService;
-  private pointsService: PointsService;
-
-  constructor() {
-    this.postService = new PostService();
-    this.pointsService = new PointsService();
-  }
-
-  // GET /api/posts - Listar todos os posts
-  async getAllPosts(req: Request, res: Response): Promise<void> {
+class PostController {
+  public getPosts = async (req: Request, res: Response): Promise<Response> => {
     try {
-      console.log('📋 Buscando todos os posts...');
-      const posts = await this.postService.getAllPosts();
-      
-      res.status(200).json({
-        success: true,
-        data: posts,
-        message: 'Posts carregados com sucesso',
-        total: posts.length
-      });
-    } catch (error) {
-      console.error('❌ Erro ao buscar posts:', error);
-      res.status(500).json({
-        success: false,
-        data: null,
-        message: 'Erro interno do servidor ao buscar posts'
-      });
-    }
-  }
-
-  // GET /api/posts/:id - Buscar post por ID
-  async getPostById(req: Request, res: Response): Promise<void> {
-    try {
-      const { id } = req.params;
-      console.log(`📋 Buscando post por ID: ${id}`);
-      
-      const post = await this.postService.getPostById(id);
-      
-      if (!post) {
-        res.status(404).json({
-          success: false,
-          data: null,
-          message: 'Post não encontrado'
-        });
-        return;
-      }
-
-      res.status(200).json({
-        success: true,
-        data: post,
-        message: 'Post encontrado com sucesso'
-      });
-    } catch (error) {
-      console.error('❌ Erro ao buscar post por ID:', error);
-      res.status(500).json({
-        success: false,
-        data: null,
-        message: 'Erro interno do servidor ao buscar post'
-      });
-    }
-  }
-
-  // POST /api/posts - Criar novo post
-  async createPost(req: Request, res: Response): Promise<void> {
-    try {
-      const { title, content, location, images } = req.body;
-      
-      // Validações básicas
-      if (!title || !content || !location) {
-        res.status(400).json({
-          success: false,
-          data: null,
-          message: 'Título, conteúdo e localização são obrigatórios'
-        });
-        return;
-      }
-
-      console.log('📝 Criando novo post:', { title, location });
-      
-      // Para agora, vamos usar um userId mockado
-      // Em produção, isso viria do token JWT
-      const userId = 'user-1';
-      
-      const postData = {
-        title,
-        content,
-        location,
-        images: images || [],
-        userId
+      const filters: PostFilters = {
+        communityId: req.query.communityId as string,
+        destinationId: req.query.destinationId as string,
+        authorId: req.query.authorId as string,
+        tag: req.query.tag as string,
+        search: req.query.search as string,
+        limit: req.query.limit ? parseInt(req.query.limit as string) : 20,
+        offset: req.query.offset ? parseInt(req.query.offset as string) : 0,
+        sortBy: (req.query.sortBy as 'recent' | 'popular') || 'recent',
       };
 
-      const newPost = await this.postService.createPost(postData);
-      
-      // Dar pontos para o usuário por criar um post
-      await this.pointsService.awardPoints(userId, 'post', `Post: ${title}`, 5);
-      
-      res.status(201).json({
+      const result = await PostService.getPosts(filters);
+
+      const response: PostsResponse = {
         success: true,
-        data: newPost,
-        message: 'Post criado com sucesso'
-      });
+        posts: result.posts,
+        total: result.total,
+        hasMore: result.hasMore,
+        nextOffset: result.hasMore ? (filters.offset || 0) + (filters.limit || 20) : undefined,
+      };
+
+      return res.status(200).json(response);
     } catch (error) {
-      console.error('❌ Erro ao criar post:', error);
-      res.status(500).json({
+      console.error('Erro ao buscar posts:', error);
+      return res.status(500).json({
         success: false,
-        data: null,
-        message: 'Erro interno do servidor ao criar post'
+        posts: [],
+        total: 0,
+        hasMore: false,
       });
     }
-  }
+  };
 
-  // POST /api/posts/:id/like - Curtir/descurtir post
-  async toggleLikePost(req: Request, res: Response): Promise<void> {
+  public getPostById = async (req: Request, res: Response): Promise<Response> => {
     try {
       const { id } = req.params;
-      
-      // Para agora, vamos usar um userId mockado
-      // Em produção, isso viria do token JWT
-      const userId = 'user-1';
-      
-      console.log(`👍 Toggling like no post ${id} pelo usuário ${userId}`);
-      
-      const result = await this.postService.toggleLikePost(id, userId);
-      
-      // Dar pontos se curtiu (não descurtiu)
-      if (result.liked) {
-        await this.pointsService.awardPoints(userId, 'like', 'Curtida em post', 1);
-      }
-      
-      res.status(200).json({
-        success: true,
-        data: result,
-        message: result.liked ? 'Post curtido com sucesso' : 'Curtida removida com sucesso'
-      });
-    } catch (error) {
-      console.error('❌ Erro ao curtir post:', error);
-      res.status(500).json({
-        success: false,
-        data: null,
-        message: 'Erro interno do servidor ao curtir post'
-      });
-    }
-  }
+      const post = await PostService.getPostById(id);
 
-  // GET /api/posts/user/:userId - Buscar posts por usuário
-  async getPostsByUser(req: Request, res: Response): Promise<void> {
-    try {
-      const { userId } = req.params;
-      console.log(`📋 Buscando posts do usuário: ${userId}`);
-      
-      const posts = await this.postService.getPostsByUser(userId);
-      
-      res.status(200).json({
+      if (!post) {
+        return res.status(404).json({
+          success: false,
+          message: 'Post não encontrado',
+        });
+      }
+
+      return res.status(200).json({
         success: true,
-        data: posts,
-        message: 'Posts do usuário carregados com sucesso',
-        total: posts.length
+        post,
       });
     } catch (error) {
-      console.error('❌ Erro ao buscar posts do usuário:', error);
-      res.status(500).json({
+      console.error('Erro ao buscar post:', error);
+      return res.status(500).json({
         success: false,
-        data: null,
-        message: 'Erro interno do servidor ao buscar posts do usuário'
+        message: 'Erro ao buscar post',
       });
     }
-  }
+  };
+
+  public createPost = async (req: Request, res: Response): Promise<Response> => {
+    try {
+      if (!req.user) {
+        return res.status(401).json({
+          success: false,
+          message: 'Usuário não autenticado',
+        });
+      }
+
+      const authorId = req.user.userId;
+      const files = req.files as Express.Multer.File[] | undefined;
+
+      const createDTO: CreatePostDTO = {
+        content: req.body.content,
+        communityId: req.body.communityId,
+        destinationId: req.body.destinationId,
+        tags: Array.isArray(req.body.tags) ? req.body.tags : (req.body.tags ? JSON.parse(req.body.tags) : []),
+      };
+
+      if (!createDTO.content || createDTO.content.trim().length === 0) {
+        return res.status(400).json({
+          success: false,
+          message: 'Conteúdo do post não pode estar vazio',
+        });
+      }
+
+      const post = await PostService.createPost(authorId, createDTO, files);
+
+      // Adicionar pontos será implementado quando o PointsService estiver completo
+      // const pointsService = new PointsService();
+      // await pointsService.addPoints(authorId, 'POST_CREATE');
+
+      return res.status(201).json({
+        success: true,
+        post,
+        message: 'Post criado com sucesso',
+      });
+    } catch (error) {
+      console.error('Erro ao criar post:', error);
+      return res.status(500).json({
+        success: false,
+        message: 'Erro ao criar post',
+        error: error instanceof Error ? error.message : 'Erro desconhecido',
+      });
+    }
+  };
+
+  public updatePost = async (req: Request, res: Response): Promise<Response> => {
+    try {
+      if (!req.user) {
+        return res.status(401).json({
+          success: false,
+          message: 'Usuário não autenticado',
+        });
+      }
+
+      const { id } = req.params;
+      const updateDTO: UpdatePostDTO = {
+        content: req.body.content,
+        tags: req.body.tags,
+      };
+
+      const post = await PostService.updatePost(id, req.user.userId, updateDTO);
+
+      if (!post) {
+        return res.status(404).json({
+          success: false,
+          message: 'Post não encontrado ou você não tem permissão para editá-lo',
+        });
+      }
+
+      return res.status(200).json({
+        success: true,
+        post,
+        message: 'Post atualizado com sucesso',
+      });
+    } catch (error) {
+      console.error('Erro ao atualizar post:', error);
+      return res.status(500).json({
+        success: false,
+        message: 'Erro ao atualizar post',
+      });
+    }
+  };
+
+  public deletePost = async (req: Request, res: Response): Promise<Response> => {
+    try {
+      if (!req.user) {
+        return res.status(401).json({
+          success: false,
+          message: 'Usuário não autenticado',
+        });
+      }
+
+      const { id } = req.params;
+      const success = await PostService.deletePost(id, req.user.userId);
+
+      if (!success) {
+        return res.status(404).json({
+          success: false,
+          message: 'Post não encontrado ou você não tem permissão para deletá-lo',
+        });
+      }
+
+      return res.status(200).json({
+        success: true,
+        message: 'Post deletado com sucesso',
+      });
+    } catch (error) {
+      console.error('Erro ao deletar post:', error);
+      return res.status(500).json({
+        success: false,
+        message: 'Erro ao deletar post',
+      });
+    }
+  };
+
+  public toggleLike = async (req: Request, res: Response): Promise<Response> => {
+    try {
+      if (!req.user) {
+        return res.status(401).json({
+          success: false,
+          message: 'Usuário não autenticado',
+        });
+      }
+
+      const { id } = req.params;
+      const { liked, likesCount } = await PostService.toggleLike(id, req.user.userId);
+
+      // Adicionar pontos será implementado quando o PointsService estiver completo
+      // if (liked) {
+      //   const pointsService = new PointsService();
+      //   await pointsService.addPoints(req.user.userId, 'POST_LIKE');
+      // }
+
+      return res.status(200).json({
+        success: true,
+        liked,
+        likesCount,
+        message: liked ? 'Post curtido' : 'Curtida removida',
+      });
+    } catch (error) {
+      console.error('Erro ao curtir post:', error);
+      return res.status(500).json({
+        success: false,
+        message: 'Erro ao processar curtida',
+      });
+    }
+  };
+
+  public addComment = async (req: Request, res: Response): Promise<Response> => {
+    try {
+      if (!req.user) {
+        return res.status(401).json({
+          success: false,
+          message: 'Usuário não autenticado',
+        });
+      }
+
+      const { id } = req.params;
+      const { content, parentCommentId } = req.body;
+
+      if (!content || content.trim().length === 0) {
+        return res.status(400).json({
+          success: false,
+          message: 'Conteúdo do comentário não pode estar vazio',
+        });
+      }
+
+      const comment = await PostService.addComment(id, req.user.userId, content, parentCommentId);
+
+      if (!comment) {
+        return res.status(404).json({
+          success: false,
+          message: 'Post não encontrado',
+        });
+      }
+
+      // Adicionar pontos será implementado quando o PointsService estiver completo
+      // const pointsService = new PointsService();
+      // await pointsService.addPoints(req.user.userId, 'COMMENT_CREATE');
+
+      return res.status(201).json({
+        success: true,
+        comment,
+        message: 'Comentário adicionado com sucesso',
+      });
+    } catch (error) {
+      console.error('Erro ao adicionar comentário:', error);
+      return res.status(500).json({
+        success: false,
+        message: 'Erro ao adicionar comentário',
+      });
+    }
+  };
+
+  public getComments = async (req: Request, res: Response): Promise<Response> => {
+    try {
+      const { id } = req.params;
+      const comments = await PostService.getComments(id);
+
+      return res.status(200).json({
+        success: true,
+        comments,
+        total: comments.length,
+      });
+    } catch (error) {
+      console.error('Erro ao buscar comentários:', error);
+      return res.status(500).json({
+        success: false,
+        comments: [],
+        total: 0,
+      });
+    }
+  };
+
+  public deleteComment = async (req: Request, res: Response): Promise<Response> => {
+    try {
+      if (!req.user) {
+        return res.status(401).json({
+          success: false,
+          message: 'Usuário não autenticado',
+        });
+      }
+
+      const { id } = req.params;
+      const success = await PostService.deleteComment(id, req.user.userId);
+
+      if (!success) {
+        return res.status(404).json({
+          success: false,
+          message: 'Comentário não encontrado ou você não tem permissão para deletá-lo',
+        });
+      }
+
+      return res.status(200).json({
+        success: true,
+        message: 'Comentário deletado com sucesso',
+      });
+    } catch (error) {
+      console.error('Erro ao deletar comentário:', error);
+      return res.status(500).json({
+        success: false,
+        message: 'Erro ao deletar comentário',
+      });
+    }
+  };
 }
+
+export default new PostController();

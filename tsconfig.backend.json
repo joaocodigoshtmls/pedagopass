@@ -30,7 +30,8 @@
     "emitDecoratorMetadata": true
   },
   "include": [
-    "src/backend/**/*"
+    "src/backend/**/*",
+    "src/shared/**/*"
   ],
   "exclude": [
     "node_modules",
